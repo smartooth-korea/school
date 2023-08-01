@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.smartooth.web.mapper.WebDiagnosisMapper">
+
+
+	<!-- 최상위 진단 정보 조회 -->
+    <select id="selectDiagDept1List" resultType="co.smartooth.web.vo.WebDiagnosisVO">
+        SELECT
+        	DIAG_CD
+        	,DIAG_NM
+		FROM ST_DIAG_DEPT1
+    </select>
+
+
+
+
+	<!-- 중위 진단 정보 조회  -->
+    <select id="selectDiagDept2List" resultType="co.smartooth.web.vo.WebDiagnosisVO">
+        SELECT 
+        	DIAG_CD
+        	,DIAG_NO
+        	,DIAG_NM
+		  FROM ST_DIAG_DEPT2
+    </select>
+
+
+
+	
+	<!-- 진단 키워드 DESCRIPT 조회 -->
+    <select id="selectDiagDescript" parameterType="String" resultType="String">
+        
+        SELECT 
+        	DIAG_DESCRIPT
+		FROM ST_DIAG_DESCRIPT
+		WHERE 1=1
+		<!-- 치아 형태 -->
+		AND TEETH_TYPE = #{teethType}
+		AND DESC_CD = #{descCd}
+		
+    </select>
+	
+	
+	
+	
+	 <!-- 진단 키워드 제목 조회 -->
+    <select id="selectDiagTitle" parameterType="String" resultType="String">
+        
+		SELECT 
+			DIAG_TITLE
+		FROM ST_DIAG_TITLE
+		WHERE 1=1
+		<!-- 치아 형태 -->
+		AND TEETH_TYPE = #{teethType}
+		AND DIAG_CD = #{diagCd}
+		  
+    </select>
+    
+    
+    
+	 <!-- 진단 코드 내용의 Count 조회 -->
+    <select id="selectDiagDescriptCount" parameterType="String" resultType="Integer">
+		
+		SELECT COUNT(*)
+		FROM ST_DIAG_DESCRIPT
+		WHERE 1=1
+		AND DESC_CD = #{descCd}
+		
+    </select>
+    
+	
+	
+	
+	
+</mapper>

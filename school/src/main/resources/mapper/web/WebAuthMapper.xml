@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.smartooth.web.mapper.WebAuthMapper">
+
+
+	<!-- 회원 아이디와 비밀번호로 존재 여부 확인 :: true = 1, false = 0 -->
+    <select id="loginChkByIdPwd" parameterType="co.smartooth.web.vo.WebAuthVO" resultType="Integer">
+
+        SELECT COUNT(*)
+        FROM ST_USER
+		WHERE 1=1
+		AND USER_ID = #{userId}
+		AND USER_PWD = #{userPwd}
+		     
+    </select>
+
+
+
+
+
+	<!-- 	회원 아이디가 존재하는지 여부 확인 :: true = 1, false = 0 -->
+    <select id="isIdExist" parameterType="co.smartooth.web.vo.WebAuthVO" resultType="Integer">
+        
+        SELECT COUNT(*)
+        FROM ST_USER
+		WHERE 1=1
+	    AND USER_ID = #{userId}
+	    
+    </select>
+
+
+
+
+	<!-- 	회원 아이디와 기관 코드 대조  -->
+    <select id="loginChkByIdOrganCd" parameterType="String" resultType="Integer">
+        
+        SELECT COUNT(*) 
+		FROM ST_USER SU
+		LEFT OUTER JOIN ST_STUDENT_USER_DETAIL SSUD
+		ON SU.USER_ID = SSUD.USER_ID
+		LEFT OUTER JOIN ST_CLASS_INFO SCI
+		ON SSUD.TEACHER_ID = SCI.CLASS_CODE
+		WHERE 1=1
+		AND SU.USER_ID = #{userId}
+		AND SCI.SCHOOL_CODE = #{organCd}
+	    
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

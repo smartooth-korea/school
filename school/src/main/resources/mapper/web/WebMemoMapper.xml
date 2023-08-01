@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="co.smartooth.web.mapper.WebMemoMapper">
+
+   	<!-- 회원의 치아 측정 값 조회 (기간)--> 
+    <select id="selectUserTeethMeasureMemo" parameterType="co.smartooth.web.vo.WebMemoVO" resultType="String">
+		
+		SELECT 
+			MEMO_DESCRIPTION
+		FROM ST_MEMO_INFO
+		WHERE 1=1
+		AND MEMO_CD = #{memoCd}
+		
+    </select >
+
+
+
+
+</mapper>
