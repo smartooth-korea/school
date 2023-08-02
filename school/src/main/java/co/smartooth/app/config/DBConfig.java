@@ -17,7 +17,8 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 /**
  * 작성자 : 정주현 
- * 작성일 : 2022. 4. 28 ~
+ * 작성일 : 2022. 04. 28
+ * 서버분리 : 2023. 08. 01
  */
 @Configuration
 @EnableTransactionManagement

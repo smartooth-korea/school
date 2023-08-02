@@ -10,7 +10,8 @@ import co.smartooth.app.vo.DiagnosisVO;
 /**
  * 작성자 : 정주현 
  * 작성일 : 2022. 11. 16
- * 수정일 : 2022. 11. 16
+ * 수정일 : 2023. 08. 02
+ * 서버분리 : 2023. 08. 01
  */
 @Mapper
 public interface DiagnosisMapper {

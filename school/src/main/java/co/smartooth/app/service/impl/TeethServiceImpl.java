@@ -16,7 +16,9 @@ import co.smartooth.app.vo.UserVO;
 
 /**
  * 작성자 : 정주현 
- * 수정일 : 2023. 05. 24
+ * 작성일 : 2022. 04. 28
+ * 수정일 : 2023. 08. 02
+ * 서버분리 : 2023. 08. 01
  */
 @Service
 public class TeethServiceImpl implements TeethService{
@@ -26,36 +28,12 @@ public class TeethServiceImpl implements TeethService{
 	TeethMapper teethMapper;
 
 	
-	// 피측정자 치아 상태 값 INSERT
-	@Override
-	public void insertUserTeethInfo(TeethInfoVO teethInfoVO) throws Exception {
-		teethMapper.insertUserTeethInfo(teethInfoVO);
-	}
-	
-	
-	
-	// 피측정자 치아 상태 값 조회
-	@Override
-	public List<TeethInfoVO> selectUserTeethInfo(UserVO userVO) throws Exception {
-		return teethMapper.selectUserTeethInfo(userVO);
-	}
-	
-	
-	
 	// 피측정자 치아 측정 값 INSERT
 	@Override
 	public void insertUserTeethMeasureValue(TeethMeasureVO teethMeasureVO) throws Exception {
 		teethMapper.insertUserTeethMeasureValue(teethMeasureVO);
 	}
 	
-	
-	
-	/** 피측정자 치아 측정 값 INSERT (치과용)**/ 
-	@Override
-	public void insertPaUserTeethMeasureValue(TeethMeasureVO teethMeasureVO) throws Exception {
-		teethMapper.insertPaUserTeethMeasureValue(teethMeasureVO);
-	}
-
 	
 	
 	// 피측정자 치아 측정 값 입력 UPDATE
@@ -66,27 +44,19 @@ public class TeethServiceImpl implements TeethService{
 
 	
 	
-	/** 피측정자 치아 측정 값 입력 UPDATE **/
-	@Override
-	public void updatePaUserTeethMeasureValue(TeethMeasureVO teethMeasureVO) throws Exception {
-		teethMapper.updatePaUserTeethMeasureValue(teethMeasureVO);
-	}
-	
-	
-	
-	// 피측정자 개별 치아 측정 값 INSERT
-	@Override
-	public void insertUserToothMeasureValue(ToothMeasureVO toothMeasureVO) throws Exception {
-		teethMapper.insertUserToothMeasureValue(toothMeasureVO);
-	}
-	
-	
-	
 	// 피측정자 개별 치아 측정 값 UPDATE
 	@Override
 	public void updateUserToothMeasureValue(ToothMeasureVO toothMeasureVO) throws Exception {
 		teethMapper.updateUserToothMeasureValue(toothMeasureVO);
 		
+	}
+	
+	
+	
+	// 회원 충치 개수 UPDATE (측정일별)
+	@Override
+	public void updateUserCavityCntByMeasureDt(TeethMeasureVO teethMeasureVO) throws Exception {
+		teethMapper.updateUserCavityCntByMeasureDt(teethMeasureVO);
 	}
 	
 	
@@ -107,22 +77,6 @@ public class TeethServiceImpl implements TeethService{
 	
 	
 	
-	// 회원 충치 개수 UPDATE (최근) - ST_STUDENT_USER_DETAIL
-	@Override
-	public void updateUserCavityCnt(TeethMeasureVO teethMeasureVO) throws Exception {
-		teethMapper.updateUserCavityCnt(teethMeasureVO);
-	}
-
-	
-	
-	// 회원 충치 개수 UPDATE (측정일별)
-	@Override
-	public void updateUserCavityCntByMeasureDt(TeethMeasureVO teethMeasureVO) throws Exception {
-		teethMapper.updateUserCavityCntByMeasureDt(teethMeasureVO);
-	}
-	
-	
-	
 //	// 피측정자 치아 측정 값 조회 (기간)
 //	@Override
 //	public TeethMeasureVO selectUserTeethMeasureValue(TeethMeasureVO teethMeasureVO) throws Exception {
@@ -134,15 +88,8 @@ public class TeethServiceImpl implements TeethService{
 	}
 
 	
-	/** 피측정자 치아 측정 값 조회 (기간) **/
-	@Override
-	public List<TeethMeasureVO> selectPaUserTeethMeasureValue(TeethMeasureVO teethMeasureVO) throws Exception {
-		return teethMapper.selectPaUserTeethMeasureValue(teethMeasureVO);
-	}
 	
-	
-	
-	// 피측정자 치아 개별 측정 값 조회 (기간)
+//	// 피측정자 치아 개별 측정 값 조회 (기간)
 //	@Override
 //	public ToothMeasureVO selectUserToothMeasureValue(ToothMeasureVO toothMeasureVO) throws Exception {
 //		return dentalTeethMapper.selectUserToothMeasureValue(toothMeasureVO);
@@ -151,38 +98,7 @@ public class TeethServiceImpl implements TeethService{
 	public List<ToothMeasureVO> selectUserToothMeasureValue(ToothMeasureVO toothMeasureVO) throws Exception {
 		return teethMapper.selectUserToothMeasureValue(toothMeasureVO);
 	}
-	
-	
-	
-	// 피측정자 치아 측정 상태 목록 조회 (IsMeasuring) 
-	@Override
-	public List<UserVO> selectStUserIsMeasuring(UserVO userVO) throws Exception {
-		return teethMapper.selectStUserIsMeasuring(userVO);
-	}
 
-	
-	
-    // 피측정자 치아 측정 상태 업데이트
-	@Override
-	public void updateStUserIsMeasuring(UserVO userVO) throws Exception {
-		teethMapper.updateStUserIsMeasuring(userVO);
-	}
-
-	
-	
-	// 피측정자 치아 측정 값 목록 조회 (최근 3개)
-	@Override
-    public List<TeethMeasureVO> selectUserMeasureValueList(@Param("userId") String userId, @Param("startDt") String startDt, @Param("endDt") String endDt) throws Exception {
-		return teethMapper.selectUserMeasureValueList(userId, startDt, endDt);
-	}
-
-    
-
-    // 충치 단계별 수치 조회
-	@Override
-	public HashMap<String, Integer> selectCavityLevel() throws Exception {
-		return teethMapper.selectCavityLevel();
-	}
 	
 	
 	// 피측정자 진단 정보 조회 (측정일)
@@ -238,12 +154,35 @@ public class TeethServiceImpl implements TeethService{
 
 
 	
-	// 피측정자 치아 정보 갯수 조회
+	// 피측정자 치아 상태 정보 존재 여부 확인 (오늘 날짜 기준)
 	@Override
-	public int selectCountTeethInfo(@Param("userId") String userId, @Param("recordDt") String recordDt) throws Exception {
-		return teethMapper.selectCountTeethInfo(userId, recordDt);
+	public int isExistTeethInfo(@Param("userId") String userId, @Param("recordDt") String recordDt) throws Exception {
+		return teethMapper.isExistTeethInfo(userId, recordDt);
+	}
+	
+	
+	
+	// 피측정자 치아 측정 상태 목록 조회 (IsMeasuring) 
+	@Override
+	public List<UserVO> selectUserIsMeasuring(UserVO userVO) throws Exception {
+		return teethMapper.selectUserIsMeasuring(userVO);
 	}
 
+	
+	
+    // 피측정자 치아 측정 상태 업데이트
+	@Override
+	public void updateStUserIsMeasuring(UserVO userVO) throws Exception {
+		teethMapper.updateStUserIsMeasuring(userVO);
+	}
+	
+	
+	
+    // 충치 단계별 수치 조회
+	@Override
+	public HashMap<String, Integer> selectCavityLevel() throws Exception {
+		return teethMapper.selectCavityLevel();
+	}
 
 
 

@@ -21,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 작성자 : 정주현 
- * 작성일 : 2022. 4. 28 ~
+ * 작성일 : 2022. 04. 28
+ * 수정일 : 2023. 08. 02
+ * 서버분리 : 2023. 08. 01
  * @RestController를 쓰지 않는 이유는 몇 안되는 mapping에 jsp를 반환해줘야하는게 있으므로 @Controller를 사용한다.
  * @RestAPI로 반환해야할 경우 @ResponseBody를 사용하여 HashMap으로 return 해준다.
  */
@@ -40,12 +42,13 @@ public class DeviceController {
 	
 	
 	/**
-	 * 기능   : 회원의 사용하는 장비 정보 INSERT
+	 * 기능   : 측정자 사용하는 장비 정보 등록
 	 * 작성자 : 정주현 
 	 * 작성일 : 2022. 05. 19
 	 * 수정일 : 2022. 08. 03
+	 * 서버분리 : 2023. 08. 01
 	 */
-//	@PostMapping(value = {"/app/user/insertDeviceInfo.do"})
+//	@PostMapping(value = {"/premium/device/insertDeviceInfo.do"})
 	@PostMapping(value = {"/premium/user/insertDeviceInfo.do"})
 	@ResponseBody
 	public HashMap<String,Object> insertDeviceInfo(@RequestBody HashMap<String, Object> paramMap, HttpServletRequest request) throws Exception {
@@ -59,7 +62,7 @@ public class DeviceController {
 		String deviceCode = null;
 		String serialNo = null;
 		String macAddress = null;
-		String userAuthToken = null;
+		// String userAuthToken = null;
 		
 		HashMap<String,Object> hm = new HashMap<String,Object>();
 		
@@ -79,7 +82,7 @@ public class DeviceController {
 		deviceVO.setSerialNo(serialNo);
 		deviceVO.setMacAddress(macAddress);
 		
-		userAuthToken = request.getHeader("Authorization");
+		// userAuthToken = request.getHeader("Authorization");
 		// TOKEN 검증
 		// JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
 		// tokenValidation = jwtTokenUtil.validateToken(userAuthToken);
@@ -91,15 +94,15 @@ public class DeviceController {
 				// 날짜로 판별
 				deviceService.insertDeviceInfo(deviceVO);
 				hm.put("code", "000");
-				hm.put("msg", "Registration Successful");
+				hm.put("msg", "기기 정보 등록 성공");
 			} catch (Exception e) {
 				hm.put("code", "500");
-				hm.put("msg", "Server Error");
+				hm.put("msg", "기기 정보를 등록하는데 실패했습니다.\n관리자에게 문의해주시기 바랍니다.");
 				e.printStackTrace();
 			}
 		}else {
 			hm.put("code", "400");
-			hm.put("msg", "The token is not valid.");
+			hm.put("msg", "토큰이 유효하지 않습니다.");
 		}
 		return hm;
 	}
@@ -108,9 +111,11 @@ public class DeviceController {
 	
 	
 	/**
-	 * 기능   : 회원의 장비 - 캘리브레이션 값 INSERT 또는 UPDATE
+	 * 기능   : 측정자 장비의 캘리브레이션 값 등록 또는 업데이트
 	 * 작성자 : 정주현 
-	 * 작성일 : 2022. 5. 19
+	 * 작성일 : 2022. 05. 19
+	 * 수정일 : 2023. 08. 02
+	 * 서버분리 : 2023. 08. 01
 	 */												
 //	@PostMapping(value = {"/app/user/insertCalibrationInfoValue.do"})
 	@PostMapping(value = {"/premium/user/insertCalibrationInfoValue.do"})
@@ -125,7 +130,7 @@ public class DeviceController {
 		String calibrationKit = null;
 		String calibrationRef = null;
 		String macAddress = null;
-		String userAuthToken = null;
+		// String userAuthToken = null;
 		
 		int isExistRow = 0;
 		
@@ -141,7 +146,7 @@ public class DeviceController {
 		userId= (String)paramMap.get("userId");
 		if(userId == null || userId.equals("") || userId.equals(" ")) {
 			hm.put("code", "401");
-			hm.put("msg", "This ID does not exist.");
+			hm.put("msg", "파라미터(ID)가 없습니다.");
 			return hm;
 		}
 		
@@ -152,12 +157,13 @@ public class DeviceController {
 		calibrationRef= (String)paramMap.get("calibrationRef");
 		macAddress = ((String)paramMap.get("macAddress"));
 		
-		userAuthToken = request.getHeader("Authorization");
+		// userAuthToken = request.getHeader("Authorization");
 		// TOKEN 검증
 		// JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
 		// tokenValidation = jwtTokenUtil.validateToken(userAuthToken);
 		
 		if (tmpTokenValidation) {
+			
 			calibrationVO.setUserId(userId);
 			calibrationVO.setUserNo(userNo);
 			calibrationVO.setCalibrationAir(calibrationAir);
@@ -176,15 +182,15 @@ public class DeviceController {
 				}
 				
 				hm.put("code", "000");
-				hm.put("msg", "Registration Successful");
+				hm.put("msg", "캘리브레이션 정보 등록 성공");
 			} catch (Exception e) {
 				hm.put("code", "500");
-				hm.put("msg", "Server Error");
+				hm.put("msg", "캘리브레이션 정보 등록에 실패했습니다.\n관리자에게 문의해주시기 바랍니다.");
 				e.printStackTrace();
 			}
 		}else {
 			hm.put("code", "400");
-			hm.put("msg", "The token is not valid.");
+			hm.put("msg", "토큰이 유효하지 않습니다.");
 		}
 		return hm;
 	}

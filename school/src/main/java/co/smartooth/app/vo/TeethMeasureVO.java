@@ -3,111 +3,101 @@ package co.smartooth.app.vo;
 import java.io.Serializable;
 
 public class TeethMeasureVO implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
-	// 피측정자 번호
+	
+	// 회원 번호
 	private String userNo;
-	// 피측정자 이름
+
+	// 회원 이름 : 추가된 내용
 	private String userName;
-	// 피측정자 아이디
+	
+	// 회원 아이디
 	private String userId;
+	
 	// 검색 (시작일)
 	private String startDt;
+	
 	// 검색 (종료일)
 	private String endDt;
+	
+	// 조회 개수
+	private int limit;
+	
 	// 치아 측정 일자
 	private String measureDt;
 	
-	// 영구치 32개 치아 변수
-	private int t01;
-	private int t02;
-	private int t03;
-	private int t04;
-	private int t05;
-	private int t06;
-	private int t07;
-	private int t08;
-	private int t09;
-	private int t10;
-	private int t11;
-	private int t12;
-	private int t13;
-	private int t14;
-	private int t15;
-	private int t16;
-	private int t17;
-	private int t18;
-	private int t19;
-	private int t20;
-	private int t21;
-	private int t22;
-	private int t23;
-	private int t24;
-	private int t25;
-	private int t26;
-	private int t27;
-	private int t28;
-	private int t29;
-	private int t30;
-	private int t31;
-	private int t32;
+	// 32개의 치아 변수
+	private int t01, t02, t03 ,t04 ,t05 ,t06 ,t07 ,t08 ,t09 ,t10
+	,t11 ,t12 ,t13 ,t14 ,t15 ,t16 ,t17 ,t18 ,t19 ,t20 ,t21 ,t22
+	,t23 ,t24 ,t25 ,t26 ,t27 ,t28 ,t29 ,t30 ,t31 ,t32
+	,t33, t34 ,t35, t36, t37, t38 ,t39 ,t40 ,t41 ,t42, t43, t44
+	,t45, t46, t47, t48 ,t49 ,t50 ,t51 ,t52, t53, t54, t55, t56;
 	
-	// 유치 24개의 치아 변수
-	private int t33;
-	private int t34;
-	private int t35;
-	private int t36;
-	private int t37;
-	private int t38;
-	private int t39;
-	private int t40;
-	private int t41;
-	private int t42;
-	private int t43;
-	private int t44;
-	private int t45;
-	private int t46;
-	private int t47;
-	private int t48;
-	private int t49;
-	private int t50;
-	private int t51;
-	private int t52;
-	private int t53;
-	private int t54;
-	private int t55;
-	private int t56;
 	
+	/**충치 상태에 따른 치아 개수*/
+	
+	// 유치 - 정상 수치 개수
 	private int cavityNormal;
+	
+	// 유치 - 주의 수치 개수 
 	private int cavityCaution;
-	private int cavityDanger;
-	
-	private int permCavityNormal;
-	private int permCavityCaution;
-	private int permCavityDanger;
-	
-	private double deteriorateScore;
-	private String diagCd;
-	private String diagDescript;
-	private String diagList;
-	private String diagTitle;
-	private String diagDescriptFl;
-	private String memo;
-	
-	private String measurerId;
-	private String schoolName;
+    
+	// 유치 - 충치 수치 개수
+    private int cavityDanger;
+    
+    // 유치 - 정상 수치 개수
+    private int permCavityNormal;
+    
+    // 유치 - 주의 수치 개수 
+    private int permCavityCaution;
+    
+    // 유치 - 충치 수치 개수
+    private int permCavityDanger;
+
+    
+    // 측정인 아이디
+    private String measurerId;
+    
+    // 진단 코드
+    private String diagCd;
+    
+    // 진단 코드
+    private String diagList;
+
+    // 모든 메모
+    private String memo;
+    
+    // 코멘트 제목
+    private String diagTitle;
+    
+    // 진단 설명 모아놓은 변수
+    private String diagDescript;
+    
+    // 진단 설명 업데이트 여부
+    private String diagDescriptFl;
+    
+    // 악화지수 점수
+    private double deteriorateScore;
+
+    // 학교(기관) 이름
+    private String schoolName;
+    
+    // 학교(기관) 코드
 	private String schoolCode;
-	public String getUserNo() {
-		return userNo;
-	}
-	public void setUserNo(String userNo) {
-		this.userNo = userNo;
-	}
+    
+    
 	public String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public String getUserNo() {
+		return userNo;
+	}
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
 	}
 	public String getUserId() {
 		return userId;
@@ -126,6 +116,12 @@ public class TeethMeasureVO implements Serializable {
 	}
 	public void setEndDt(String endDt) {
 		this.endDt = endDt;
+	}
+	public int getLimit() {
+		return limit;
+	}
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 	public String getMeasureDt() {
 		return measureDt;
@@ -505,11 +501,11 @@ public class TeethMeasureVO implements Serializable {
 	public void setPermCavityDanger(int permCavityDanger) {
 		this.permCavityDanger = permCavityDanger;
 	}
-	public double getDeteriorateScore() {
-		return deteriorateScore;
+	public String getMeasurerId() {
+		return measurerId;
 	}
-	public void setDeteriorateScore(double deteriorateScore) {
-		this.deteriorateScore = deteriorateScore;
+	public void setMeasurerId(String measurerId) {
+		this.measurerId = measurerId;
 	}
 	public String getDiagCd() {
 		return diagCd;
@@ -517,29 +513,11 @@ public class TeethMeasureVO implements Serializable {
 	public void setDiagCd(String diagCd) {
 		this.diagCd = diagCd;
 	}
-	public String getDiagDescript() {
-		return diagDescript;
-	}
-	public void setDiagDescript(String diagDescript) {
-		this.diagDescript = diagDescript;
-	}
 	public String getDiagList() {
 		return diagList;
 	}
 	public void setDiagList(String diagList) {
 		this.diagList = diagList;
-	}
-	public String getDiagTitle() {
-		return diagTitle;
-	}
-	public void setDiagTitle(String diagTitle) {
-		this.diagTitle = diagTitle;
-	}
-	public String getDiagDescriptFl() {
-		return diagDescriptFl;
-	}
-	public void setDiagDescriptFl(String diagDescriptFl) {
-		this.diagDescriptFl = diagDescriptFl;
 	}
 	public String getMemo() {
 		return memo;
@@ -547,11 +525,29 @@ public class TeethMeasureVO implements Serializable {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	public String getMeasurerId() {
-		return measurerId;
+	public String getDiagTitle() {
+		return diagTitle;
 	}
-	public void setMeasurerId(String measuredId) {
-		this.measurerId = measuredId;
+	public void setDiagTitle(String diagTitle) {
+		this.diagTitle = diagTitle;
+	}
+	public String getDiagDescript() {
+		return diagDescript;
+	}
+	public void setDiagDescript(String diagDescript) {
+		this.diagDescript = diagDescript;
+	}
+	public String getDiagDescriptFl() {
+		return diagDescriptFl;
+	}
+	public void setDiagDescriptFl(String diagDescriptFl) {
+		this.diagDescriptFl = diagDescriptFl;
+	}
+	public double getDeteriorateScore() {
+		return deteriorateScore;
+	}
+	public void setDeteriorateScore(double deteriorateScore) {
+		this.deteriorateScore = deteriorateScore;
 	}
 	public String getSchoolName() {
 		return schoolName;

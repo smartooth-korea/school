@@ -7,14 +7,13 @@ spring:
     datasource:
         driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
         #개발서버
-        db-url: jdbc:log4jdbc:mariadb://smartooth-premium-dev.cdx8q9adtw2b.ap-northeast-2.rds.amazonaws.com/smartooth_dentist_local
+        #db-url: jdbc:log4jdbc:mariadb://smartooth-premium-dev.cdx8q9adtw2b.ap-northeast-2.rds.amazonaws.com/smartooth_dentist_local
         #운영서버 DEV Database - smartooth_premium
-        #db-url: jdbc:log4jdbc:mariadb://smartooth-premium-dev.cdx8q9adtw2b.ap-northeast-2.rds.amazonaws.com/smartooth_premium
+        db-url: jdbc:log4jdbc:mariadb://smartooth-premium-dev.cdx8q9adtw2b.ap-northeast-2.rds.amazonaws.com/smartooth_premium
         db-username: smartooth
         db-password: smartooth509#
 
-    loginUrl: localhost:8090
-    #loginUrl: localhost:8092
+    loginUrl: localhost:8091
         
     mvc:
         view:
@@ -46,7 +45,7 @@ spring:
 server:
     #로컬 local
     ip: 127.0.0.1
-    port: 8090
+    port: 8091
     #port: 8092
             
 #---

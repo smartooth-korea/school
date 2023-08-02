@@ -27,19 +27,24 @@ import co.smartooth.app.vo.UserVO;
  * 작성자 : 정주현 
  * 작성일 : 2022. 04. 28
  * 수정일 : 2023. 06. 28
+ * 서버분리 : 2023. 08. 01
  */
 @Controller
 public class LoginController {
 
+	
 	@Autowired(required = false)
 	private LogService logService;
 
+	
 	@Autowired(required = false)
 	private AuthService authService;
 
+	
 	@Autowired(required = false)
 	private UserService userService;
 
+	
 	@Autowired(required = false)
 	private OrganService organService;
 	
@@ -55,21 +60,24 @@ public class LoginController {
 	@ResponseBody
 	public HashMap<String,Object> appLogin(@RequestBody HashMap<String, Object> paramMap) {
        
-	    Logger logger = LoggerFactory.getLogger(getClass());
-
-	    logger.debug("========== Premium LoginController ========== /premium/login.do ==========");
-	    logger.debug("========== Premium LoginController ========== /premium/login.do ==========");
-	    logger.debug("========== Premium LoginController ========== /premium/login.do ==========");
-	    logger.debug("========== Premium LoginController ========== /premium/login.do ==========");
 	    
-	    //String lang = (String)paramMap.get("lang");
+		Logger logger = LoggerFactory.getLogger(getClass());
+
+	    
+	    logger.debug("========== School.LoginController ========== /premium/login.do ==========");
+	    logger.debug("========== School.LoginController ========== /premium/login.do ==========");
+	    logger.debug("========== School.LoginController ========== /premium/login.do ==========");
+	    logger.debug("========== School.LoginController ========== /premium/login.do ==========");
+	    
+	    
 	    // 하드코딩
-	    String lang = "ko";
+	    // String lang = (String)paramMap.get("lang");
+	    // String lang = "ko";
 	    String userId = null;
 		String userPwd = null;
 		String userType = null;
 		String loginIp = null;
-		String userAuthToken = null;
+		// String userAuthToken = null;
 		
 		int loginChkByIdPwd = 0;
 		int isIdExist = 0;
@@ -99,11 +107,11 @@ public class LoginController {
 		
 		if(userPwd.equals("false")) { // 암호화에 실패할 경우
 			hm.put("code", "500");
-			if(lang.equals("ko")) {
-				hm.put("msg", "서버 에러가 발생했습니다.\n관리자에게 문의해주시기 바랍니다.");
-			}else if(lang.equals("en")) {
-				hm.put("msg", "Server Error");
-			}
+			//if(lang.equals("ko")) {
+				hm.put("msg", "비밀번호 암호화에 실패하였습니다.\n관리자에게 문의해주시기 바랍니다.");
+			//}else if(lang.equals("en")) {
+			//	hm.put("msg", "Server Error");
+			//}
 			return hm;
 		}
 		
@@ -113,7 +121,6 @@ public class LoginController {
 		authVO.setLoginDt(sysDate);
 		authVO.setUserIp(loginIp);
 		
-		
 		try {
 			
 			// 로그인 확인
@@ -121,18 +128,18 @@ public class LoginController {
 			if(loginChkByIdPwd == 0){ // 0일 경우는 Database에 ID와 비밀번호가 틀린 것
 				isIdExist = authService.isIdExist(authVO.getUserId());
 				if(isIdExist == 0) { // ID가 존재하지 않을 경우
-					if(lang.equals("ko")) {
+					//if(lang.equals("ko")) {
 						hm.put("msg", "해당 아이디가 존재하지 않습니다");
-					}else if(lang.equals("en")) {
-						hm.put("msg", "This ID does not exist");
-					}
+					//}else if(lang.equals("en")) {
+					//	hm.put("msg", "This ID does not exist");
+					//}
 				}else { // PWD가 틀렸을 경우
 					hm.put("code", "406");
-					if(lang.equals("ko")) {
+					//if(lang.equals("ko")) {
 						hm.put("msg", "비밀번호가 틀렸습니다");
-					}else if(lang.equals("en")) {
-						hm.put("msg", "The password is wrong");
-					}
+					//}else if(lang.equals("en")) {
+					//	hm.put("msg", "The password is wrong");
+					//}
 				}
 			}else { 
 				
@@ -154,30 +161,29 @@ public class LoginController {
 				}else {
 					measureOranList = organService.selectMeasureOrganList(userId);
 				}
-				
-				
+
 				// 데이터 RETURN0
-				hm.put("userAuthToken", userAuthToken);
+				// hm.put("userAuthToken", userAuthToken);
 				hm.put("measureOranList", measureOranList);
 				
 				// 메시지 RETURN
 				hm.put("code", "000");
-				if(lang.equals("ko")) {
+				//if(lang.equals("ko")) {
 					hm.put("msg", "로그인 성공");
-				}else if(lang.equals("en")) {
-					hm.put("msg", "Login Success");
-				}
+				//}else if(lang.equals("en")) {
+				//	hm.put("msg", "Login Success");
+				//}
 				
 				// 로그인 Log 등록
 				logService.insertUserLoginHistory(authVO);
 			}
 		} catch (Exception e) {
 			hm.put("code", "500");
-			if(lang.equals("ko")) {
-				hm.put("msg", "서버 에러가 발생했습니다.\n관리자에게 문의해주시기 바랍니다.");
-			}else if(lang.equals("en")) {
-				hm.put("msg", "Server Error");
-			}
+			//if(lang.equals("ko")) {
+				hm.put("msg", "서버 에러가 발생했습니다.\n관리자에게 문의해주시기 바랍니다." );
+			//}else if(lang.equals("en")) {
+			//	hm.put("msg", "Server Error");
+			//}
 			e.printStackTrace();
 		}
 		return hm;
