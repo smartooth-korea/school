@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import co.smartooth.app.service.OrganService;
 //import co.smartooth.app.service.RegistService;
 import co.smartooth.app.service.TeethService;
 import co.smartooth.app.utils.AES256Util;
@@ -33,6 +35,10 @@ public class UtilsController {
 	
 	@Autowired(required = false)
 	private TeethService teethService;
+
+	
+	@Autowired(required = false)
+	private OrganService organService;
 	
 	
 	/**
@@ -301,202 +307,76 @@ public class UtilsController {
 	
 	
 	/**
-	 * 기능   : 치아 상태 및 정보 조회
+	 * 기능   : 그래프 통계 일괄 계산
 	 * 작성자 : 정주현 
-	 * 작성일 : 2022. 08. 24
-	 * 수정일 : 2023. 08. 01
+	 * 작성일 : 2022. 08. 29
+	 * 수정일 : 2023. 08. 29
 	 */
-	@PostMapping(value = {"/premium/utils/selectTeethStatusInfo.do"})
+	@PostMapping(value = { "/premium/utils/graphBatch.do" })
 	@ResponseBody
-	public HashMap<String,Object> selectTeethStatusInfo(@RequestBody HashMap<String, Object> paramMap) {
-		
-		logger.debug("========== UtilController ========== passwordCrypto.do ==========");
-		
-		HashMap<String, Object> hm = new HashMap<String, Object>();
-		
-		String teethStatus = null;
-		String teethStatusStr = null;
-		String loosingToothNoStr = "";
-		String treatedToothNoStr = "";
-		
-		ArrayList<Integer> losingToothArray = new ArrayList<Integer>();
-		ArrayList<Integer> treatedToothArray = new ArrayList<Integer>();
-		
-		int treatedCnt = 0;
-		int cameOutCnt = 0;
-		
-		String[] teethStatusArray = new String[32]; 
-		
-		// 치아 상태 정보 파라미터
-		teethStatus = (String)paramMap.get("teethStatus");
-		
-		teethStatusArray = teethStatus.split("\\|");
-		
-		for(int i=0 ; i<teethStatusArray.length; i++) {
-		
-			// 빠진 치아
-			if(teethStatusArray[i].equals("200")) {
-				cameOutCnt++;
-				losingToothArray.add(i+1);
-				
-			}
-			// 치료받은 치아
-			if(teethStatusArray[i].equals("300")) {
-				treatedCnt++;
-				treatedToothArray.add(i+1);
-			}
+	public HashMap<String,Object> graphBatch(@RequestBody HashMap<String, Object> paramMap) {
 
-		}
+		String schoolCode = (String) paramMap.get("schoolCode");
+		String measureDt = (String) paramMap.get("measureDt");
+
+		// 진단 내용에 따른 기준 점수 조회 (하드코딩 되어 있으므로 조회하도록 변경해야함)
+		double cavityCautionScore = 1;
+		double cavityDangerScore = 4;
+		double permCavityCautionScore = 1.5;
+		double permCavityDangerScore = 6;
+
+		HashMap<String, Object> hm = new HashMap<String, Object>();
+		TeethMeasureVO teethMeasureVO = new TeethMeasureVO();
+
+		// 회원들의 측정 값 통계 목록
+		List<HashMap<String, Object>> dataList = new ArrayList<HashMap<String, Object>>();
 		
-		for(Integer losingTooth : losingToothArray) {
-			
-			switch (losingTooth) {
-	            case 1:  loosingToothNoStr += "영구치1,";
-	                     break;
-	            case 2:  loosingToothNoStr += "영구치2,";
-	                     break;
-	            case 3:  loosingToothNoStr += "16,";
-	                     break;
-	            case 4:  loosingToothNoStr += "55,";
-	                     break;
-	            case 5:  loosingToothNoStr += "54,";
-	                     break;
-	            case 6:  loosingToothNoStr += "53,";
-	                     break;
-	            case 7:  loosingToothNoStr += "52,";
-	                     break;
-	            case 8:  loosingToothNoStr += "51,";
-	                     break;
-	            case 9:  loosingToothNoStr += "61,";
-	                     break;
-	            case 10: loosingToothNoStr += "62,";
-	                     break;
-	            case 11: loosingToothNoStr += "63,";
-	                     break;
-	            case 12: loosingToothNoStr += "64,";
-	                     break;
-	            case 13: loosingToothNoStr += "65,";
-	            		break;
-	            case 14: loosingToothNoStr += "26,";
-	            		break;
-	            case 15: loosingToothNoStr += "영구치15,";
-	            		break;
-	            case 16: loosingToothNoStr += "영구치16,";
-	            		break;
-	            case 17: loosingToothNoStr += "영구치17,";
-	            		break;
-	            case 18: loosingToothNoStr += "영구치18,";
-	            		break;
-	            case 19: loosingToothNoStr += "36,";
-	            		break;
-	            case 20: loosingToothNoStr += "75,";
-	            		break;
-	            case 21: loosingToothNoStr += "74,";
-	            		break;
-	            case 22: loosingToothNoStr += "73,";
-	            		break;
-	            case 23: loosingToothNoStr += "72,";
-	            		break;
-	            case 24: loosingToothNoStr += "71,";
-	            		break;
-	            case 25: loosingToothNoStr += "81,";
-	            		break;
-	            case 26: loosingToothNoStr += "82,";
-	            		break;
-	            case 27: loosingToothNoStr += "83,";
-	            		break;
-	            case 28: loosingToothNoStr += "84,";
-	            		break;
-	            case 29: loosingToothNoStr += "85,";
-	            		break;
-	            case 30: loosingToothNoStr += "46,";
-	            		break;
-	            case 31: loosingToothNoStr += "영구치31,";
-	            		break;
-	            case 32: loosingToothNoStr += "영구치32,";
-	            		break;
-			}
+		try {
+			dataList = teethService.selectUserMeasureStatisticsList(schoolCode, measureDt);
 		
 		
+			for (int i = 0; i < dataList.size(); i++) {
+				// 측정 회원의 아이디
+				String stUserId = (String) dataList.get(i).get("USER_ID");
+				// 측정 회원 진단 태그 항목
+				String diagCd = (String) dataList.get(i).get("DIAG_CD");
 		
-		for(Integer treatedTooth : treatedToothArray) {
-			
-			switch (treatedTooth) {
-	            case 1:  treatedToothNoStr += "영구치1,";
-	                     break;
-	            case 2:  treatedToothNoStr += "영구치2,";
-	                     break;
-	            case 3:  treatedToothNoStr += "16,";
-	                     break;
-	            case 4:  treatedToothNoStr += "55,";
-	                     break;
-	            case 5:  treatedToothNoStr += "54,";
-	                     break;
-	            case 6:  treatedToothNoStr += "53,";
-	                     break;
-	            case 7:  treatedToothNoStr += "52,";
-	                     break;
-	            case 8:  treatedToothNoStr += "51,";
-	                     break;
-	            case 9:  treatedToothNoStr += "61,";
-	                     break;
-	            case 10: treatedToothNoStr += "62,";
-	                     break;
-	            case 11: treatedToothNoStr += "63,";
-	                     break;
-	            case 12: treatedToothNoStr += "64,";
-	                     break;
-	            case 13: treatedToothNoStr += "65,";
-	            		break;
-	            case 14: treatedToothNoStr += "26,";
-	            		break;
-	            case 15: treatedToothNoStr += "영구치15,";
-	            		break;
-	            case 16: treatedToothNoStr += "영구치16,";
-	            		break;
-	            case 17: treatedToothNoStr += "영구치17,";
-	            		break;
-	            case 18: treatedToothNoStr += "영구치18,";
-	            		break;
-	            case 19: treatedToothNoStr += "36,";
-	            		break;
-	            case 20: treatedToothNoStr += "75,";
-	            		break;
-	            case 21: treatedToothNoStr += "74,";
-	            		break;
-	            case 22: treatedToothNoStr += "73,";
-	            		break;
-	            case 23: treatedToothNoStr += "72,";
-	            		break;
-	            case 24: treatedToothNoStr += "71,";
-	            		break;
-	            case 25: treatedToothNoStr += "81,";
-	            		break;
-	            case 26: treatedToothNoStr += "82,";
-	            		break;
-	            case 27: treatedToothNoStr += "83,";
-	            		break;
-	            case 28: treatedToothNoStr += "84,";
-	            		break;
-	            case 29: treatedToothNoStr += "85,";
-	            		break;
-	            case 30: treatedToothNoStr += "46,";
-	            		break;
-	            case 31: treatedToothNoStr += "영구치31,";
-	            		break;
-	            case 32: treatedToothNoStr += "영구치32,";
-	            		break;
+				// 유치 및 영구치 >> 주의(caution) 치아 및 충치(danger) 치아 개수
+				int cavityCautionCnt = Integer.parseInt(dataList.get(i).get("CAVITY_CAUTION").toString());
+				int cavityDangerCnt = Integer.parseInt(dataList.get(i).get("CAVITY_DANGER").toString());
+				int permCavityCautionCnt = Integer.parseInt(dataList.get(i).get("PERM_CAVITY_CAUTION").toString());
+				int permCavityDangerCnt = Integer.parseInt(dataList.get(i).get("PERM_CAVITY_DANGER").toString());
+				// 악화지수 계산ㄴ
+				double deteriorateScore = (cavityCautionCnt * cavityCautionScore) + (cavityDangerCnt * cavityDangerScore) + (permCavityCautionCnt * permCavityCautionScore) + (permCavityDangerCnt * permCavityDangerScore);
+		
+				// 충치 및 주의가 있을 경우 소견 점수는 포함되지 않는다.
+				if (deteriorateScore == 0) {
+					// 치태 및 치석이 존재 할 경우 (하드코딩)
+					if (diagCd.contains("A:006:1")) {
+						deteriorateScore = 0.3;
+					}
 				}
-			
+
+				teethMeasureVO.setUserId(stUserId);
+				teethMeasureVO.setMeasureDt(measureDt);
+				teethMeasureVO.setDeteriorateScore(deteriorateScore);
+		
+				// 악화 지수 업데이트
+				teethService.updateUserDeteriorateScore(teethMeasureVO);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			hm.put("code", "500");
+			hm.put("msg", "그래프 통계 관련 계산 중 문제가 발생하였습니다.\n관리자에게 문의해주시기 바랍니다.");
 		}
+		// 그래프 계산 일괄 작업 여부 업데이트 (Y)
+		// organService.updateGraphBatchedStatus(schoolCode);
+		hm.put("msg", "000");
+		hm.put("msg", "그래프 통계 계산이 완료되었습니다.");
 		
-		loosingToothNoStr = loosingToothNoStr.substring(0, loosingToothNoStr.length()-1);
-		treatedToothNoStr = treatedToothNoStr.substring(0, treatedToothNoStr.length()-1);
-		
-		hm.put("loosingToothNoStr", loosingToothNoStr);
-		hm.put("treatedToothNoStr", treatedToothNoStr);
 		return hm;
 	}
+	
+	
 	
 }

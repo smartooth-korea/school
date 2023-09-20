@@ -157,6 +157,8 @@ public class TeethController {
 		String endDt = (String) paramMap.get("endDt");
 		// 기관 코드
 		// String schoolCode = (String) paramMap.get("schoolCode");
+		// 측정자 아이디
+		String measurerId = (String) paramMap.get("measurerId");
 
 		/** 치아 관련 정보 **/
 		// 회원 치아 정보
@@ -222,11 +224,13 @@ public class TeethController {
 				toothMeasureVO.setEndDt(endDt);
 				toothMeasureVO.setToothNo(toothNo);
 				toothMeasureVO.setMeasureDt(sysDate);
+				toothMeasureVO.setMeasurerId(measurerId);
 				// 치아 전체
 				teethMeasureVO.setUserId(userId);
 				teethMeasureVO.setStartDt(startDt);
 				teethMeasureVO.setEndDt(endDt);
 				teethMeasureVO.setMeasureDt(sysDate);
+				teethMeasureVO.setMeasurerId(measurerId);
 
 				// 오늘의 데이터 존재 여부 확인
 				isExistSysdateRow = teethService.isExistSysDateRow(userId);
@@ -446,7 +450,7 @@ public class TeethController {
 				hm.put("userToothValues", userToothValues);
 				hm.put("userTeethValues", userTeethValues);
 				hm.put("teethStatus", teethStatus);
-
+				
 				hm.put("code", "000");
 				hm.put("msg", "Success");
 			} catch (Exception e) {
@@ -609,25 +613,37 @@ public class TeethController {
 		// 오늘 날짜 구하기 (SYSDATE)
 		LocalDate now = LocalDate.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String measureDt = now.format(formatter);
+		LocalDate minusYears = now.minusYears(1);
+
+		String startDt = minusYears.format(formatter);
+		String endDt = now.format(formatter);
+		String measureDt = endDt;
 
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		TeethMeasureVO teethMeasureVO = new TeethMeasureVO();
-
+		
 		try {
 			if (!"ÿ".equals(memo)) {
-				// 파라미터로 받은 MEMO 정보를 업데이트
-				teethService.updateMemo(userId, memo, measureDt);
+				
+				int isExistSysDateRow = teethService.isExistSysDateRow(userId);
+				if(isExistSysDateRow == 0) {
+					hm.put("code", "200");
+					hm.put("msg", "측정 날짜가 아닌 날짜의 데이터는 메모가 수정이 불가능합니다.\n관리자에게 문의해주시기 바랍니다.");
+				}else {
+					teethService.updateMemo(userId, memo, measureDt);
+					hm.put("code", "000");
+					hm.put("msg", "메모 등록 성공");
+				}
 			}
 			teethMeasureVO = teethService.selectMemo(userId, measureDt);
+			hm.put("memoInfo", teethMeasureVO);
+			
 		} catch (Exception e) {
 			hm.put("code", "500");
 			hm.put("msg", "메모 등록에 실패했습니다.\n관리자에게 문의해주시기 바랍니다.");
 			e.printStackTrace();
 		}
-		hm.put("code", "000");
-		hm.put("msg", "메모 등록 성공");
-		hm.put("memoInfo", teethMeasureVO);
+		
 		return hm;
 
 	}

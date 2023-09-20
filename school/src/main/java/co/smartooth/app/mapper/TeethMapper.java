@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
-import co.smartooth.app.vo.TeethInfoVO;
 import co.smartooth.app.vo.TeethMeasureVO;
 import co.smartooth.app.vo.ToothMeasureVO;
 import co.smartooth.app.vo.UserVO;
@@ -13,7 +11,7 @@ import co.smartooth.app.vo.UserVO;
 /**
  * 작성자 : 정주현
  * 작성일 : 2022. 04. 28
- * 수정일 : 2023. 05. 24
+ * 수정일 : 2023. 08. 29
  * 서버분리 : 2023. 08. 01
  */
 @Mapper
@@ -98,4 +96,28 @@ public interface TeethMapper {
 	public HashMap<String, Integer> selectCavityLevel() throws Exception;
 	
 	
+	
+	
+	
+	// 피측정자 최근 측정일 조회
+	public String selectMeasureDt(@Param("userId") String userId) throws Exception;
+	
+	
+	
+	
+	
+	
+	
+	
+	// 부서 소속 피측정자의 측정 값 통계 목록
+	public List<HashMap<String, Object>> selectUserMeasureStatisticsList(@Param("schoolCode") String schoolCode, @Param("measureDt") String measureDt) throws Exception;
+		
+		
+	// 악화 지수 점수 업데이트 
+	public void updateUserDeteriorateScore(TeethMeasureVO teethMeasureVO) throws Exception;
+
+		
+
+		
+
 }

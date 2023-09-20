@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import co.smartooth.app.service.OrganService;
 
@@ -38,7 +39,7 @@ public class OrganController {
 	 * 기능   : 기관 선택 (유치원)
 	 * 작성자 : 정주현 
 	 * 작성일 : 2022. 07. 13
-	 * 수정일 : 2023. 08. 02
+	 * 수정일 : 2023. 08. 28
 	 * 서버분리 : 2023. 08. 01
 	 * 비고 : 추후 organ으로 이름을 변경할 예정
 	 */
@@ -54,7 +55,10 @@ public class OrganController {
 		
 		HashMap<String,Object> hm = new HashMap<String,Object>();
 		
+		int userCount = 0;
+		String userId = null;
 		List<HashMap<String, Object>> tcList = new ArrayList<HashMap<String, Object>>();
+		
 		
 		// JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
 		// tokenValidation = jwtTokenUtil.validateToken(userAuthToken);
@@ -64,6 +68,13 @@ public class OrganController {
 			try {
 				// Teacher List 조회
 				tcList = organService.selectDepartmentList(organCd);
+				for(int i=0; i<tcList.size();i++) {
+					// 반 아이디로 반에 해당하는 피측정자 회원 수 조회
+					userId = (String)tcList.get(i).get("userId");
+					userCount = organService.selectDepartmentUserCount(userId);
+					tcList.get(i).put("userCount", userCount);
+				}
+				
 			} catch (Exception e) {
 				hm.put("code", "500");
 				hm.put("msg", "반(부서) 목록 조회를 하지 못했습니다.\n관리자에게 문의 해주시기 바랍니다.");

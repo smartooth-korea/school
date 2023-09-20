@@ -16,6 +16,9 @@
     		,T31 ,T32 ,T33 ,T34 ,T35 ,T36 ,T37 ,T38 ,T39 ,T40
     		,T41 ,T42 ,T43 ,T44 ,T45 ,T46 ,T47 ,T48 ,T49 ,T50
     		,T51 ,T52 ,T53 ,T54 ,T55 ,T56
+		<if test=" measurerId != null and measurerId != '' ">
+			,MEASURER_ID
+		</if>
 		<if test=" cavityNormal != null and cavityNormal != '' ">
 			,CAVITY_NORMAL
 		</if>
@@ -24,6 +27,9 @@
 		</if>
 		<if test=" cavityDanger != null and cavityDanger != '' ">
 			,CAVITY_DANGER
+		</if>
+		<if test=" memo != null and memo != '' ">
+			,MEMO
 		</if>
     		,MEASURE_DT
     		,DIAG_CD
@@ -49,6 +55,9 @@
 		</if>
 		<if test=" cavityDanger != null and cavityDanger != '' ">
 			,#{cavityDanger}
+		</if>
+		<if test=" memo != null and memo != '' ">
+			,#{memo}
 		</if>
     		,SYSDATE()
     		,#{diagCd}
@@ -142,13 +151,18 @@
     <update id="updateUserToothMeasureValue" parameterType="co.smartooth.app.vo.ToothMeasureVO">
 		
 		UPDATE ST_TEETH_MEASURE
-		SET  ${toothNo}  =  #{toothValue}
+		<trim prefix="SET" suffixOverrides=",">
+			${toothNo}  =  #{toothValue},
+			<if test="measurerId != null and measurerId != '' ">
+				MEASURER_ID = #{measurerId},
+			</if>
+			<if test="schoolCode != null and schoolCode != '' ">
+				ORGAN_CODE = #{schoolCode},
+			</if>
+		</trim>
 		WHERE 1=1
 		AND USER_ID = #{userId}
-		<if test=" userNo != null and userNo != '' ">
-			AND USER_NO = #{userNo}
-   		</if>
-			AND DATE_FORMAT(MEASURE_DT, '%Y-%m-%d') = #{measureDt}
+		AND DATE_FORMAT(MEASURE_DT, '%Y-%m-%d') = #{measureDt}
    		
     </update>
     
@@ -458,6 +472,92 @@
 		
 	</select>
 	
+	
+	
+	
+	
+	<!-- 피측정자 최근 측정일 조회 -->
+	<select id="selectMeasureDt" parameterType="String" resultType="String">
+
+		SELECT 
+			DATE_FORMAT(MEASURE_DT, '%Y-%m-%d') AS measureDt
+		FROM ST_TEETH_MEASURE
+		WHERE 1=1
+		AND USER_ID = #{userId}
+		ORDER BY MEASURE_DT DESC
+		LIMIT 1
+		
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 피측정자들의 측정 값 통계 목록 -->
+	<select id="selectUserMeasureStatisticsList" parameterType="String" resultType="Hashmap">
+	
+		SELECT DISTINCT
+			SU.USER_NAME																			AS USER_NAME
+			,SU.USER_ID																				AS USER_ID
+			,SSI.SCHOOL_NAME																		AS SCHOOL_NAME
+			,STI.CLASS_NAME																		AS CLASS_NAME
+			,TIMESTAMPDIFF(MONTH, SU.USER_BIRTHDAY, SYSDATE())+1 				AS MONTH_COUNT
+			,DATE_FORMAT(SU.USER_BIRTHDAY, '%Y-%m-%d') 							AS USER_BIRTHDAY 
+			,CASE SU.USER_SEX WHEN 'M' THEN '남' 
+							  WHEN 'F' THEN '여'
+							  ELSE '' END 																AS USER_SEX
+			,SU.USER_TEL_NO AS USER_TEL_NO
+			,DATE_FORMAT(MEASURE_DT, '%Y-%m-%d') AS MEASURE_DT
+			,STM.CAVITY_NORMAL																	AS CAVITY_NORMAL
+			,STM.CAVITY_CAUTION																	AS CAVITY_CAUTION
+			,STM.CAVITY_DANGER																	AS CAVITY_DANGER
+			,STM.PERM_CAVITY_NORMAL															AS PERM_CAVITY_NORMAL
+			,STM.PERM_CAVITY_CAUTION														AS PERM_CAVITY_CAUTION
+			,STM.PERM_CAVITY_DANGER															AS PERM_CAVITY_DANGER
+			,STM.DIAG_CD                                                                     		AS DIAG_CD
+			,STM.DETERIORATE_SCORE															AS DETERIORATE_SCORE
+		FROM ST_TEETH_MEASURE STM
+		LEFT OUTER JOIN ST_USER SU
+		ON STM.USER_ID = SU.USER_ID
+		LEFT OUTER JOIN ST_STUDENT_USER_DETAIL SSUD
+		ON SU.USER_ID = SSUD.USER_ID
+		LEFT OUTER JOIN ST_TEACHER_USER_DETAIL STUD
+		ON SSUD.TEACHER_ID = STUD.USER_ID
+		LEFT OUTER JOIN ST_CLASS_INFO STI
+		ON STUD.CLASS_CODE = STI.CLASS_CODE
+		LEFT OUTER JOIN ST_SCHOOL_INFO SSI
+		ON STUD.SCHOOL_CODE = SSI.SCHOOL_CODE
+		WHERE 1=1 
+		AND DATE_FORMAT(MEASURE_DT, '%Y-%m-%d') = #{measureDt}
+		AND STUD.SCHOOL_CODE = #{schoolCode}
+		ORDER BY STM.DETERIORATE_SCORE DESC
+	
+	</select>
+	
+	
+	
+	
+	
+	<!-- 악화 지수 점수 업데이트-->
+    <update id="updateUserDeteriorateScore" parameterType="co.smartooth.app.vo.TeethMeasureVO">
+		
+		UPDATE ST_TEETH_MEASURE
+		SET  DETERIORATE_SCORE  =  #{deteriorateScore}
+		WHERE 1=1
+		AND USER_ID = #{userId}
+		AND DATE_FORMAT(MEASURE_DT, '%Y-%m-%d') = #{measureDt}
+   		
+    </update>
 
 
 

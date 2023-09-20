@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 /**
  * 작성자 : 정주현 
  * 작성일 : 2023. 05. 18
- * 수정일 : 2023. 08. 02
+ * 수정일 : 2023. 08. 29
  * 서버분리 : 2023. 08. 01
  */
 public interface OrganService {
@@ -25,6 +25,11 @@ public interface OrganService {
 	
 	// 부서(반) 목록 조회
 	public List<HashMap<String, Object>> selectDepartmentList(@Param("organCd") String organCd) throws Exception;
+	
+	
+	// 부서(반)에 해당하는 피측정자 회원 수 조회
+	public int selectDepartmentUserCount(@Param("userId") String userId) throws Exception;
+	
 	
 	
 }

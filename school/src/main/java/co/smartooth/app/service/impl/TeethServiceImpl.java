@@ -186,4 +186,42 @@ public class TeethServiceImpl implements TeethService{
 
 
 
+	
+	
+	
+	// 피측정자 최근 측정일 조회
+	@Override
+	public String selectMeasureDt(@Param("userId") String userId) throws Exception {
+		return teethMapper.selectMeasureDt(userId);
+	}
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	// 부서 소속 피측정자의 측정 값 통계 목록
+	@Override
+	public List<HashMap<String, Object>> selectUserMeasureStatisticsList(@Param("schoolCode") String schoolCode, @Param("measureDt") String measureDt) throws Exception{
+		return teethMapper.selectUserMeasureStatisticsList(schoolCode, measureDt);
+	}
+
+
+	
+	// 악화 지수 점수 업데이트 
+	@Override
+	public void updateUserDeteriorateScore(TeethMeasureVO teethMeasureVO) throws Exception {
+		teethMapper.updateUserDeteriorateScore(teethMeasureVO);
+	}
+
+
+	
+
+
+
 }

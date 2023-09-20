@@ -32,7 +32,7 @@ public class OrganServiceImpl implements OrganService{
 	
 	// 등록 되어 있는 측정 예정 혹은 측정 완료 기관 목록 조회 (SYSDATE 기준)
 	@Override
-	public List<HashMap<String, Object>> selectMeasureOrganList(@Param("userId")  String userId) throws Exception {
+	public List<HashMap<String, Object>> selectMeasureOrganList(@Param("userId") String userId) throws Exception {
 		return organMapper.selectMeasureOrganList(userId);
 	}
 	
@@ -44,5 +44,15 @@ public class OrganServiceImpl implements OrganService{
 		return organMapper.selectDepartmentList(organCd);
 	}
 
+
+	
+	// 부서(반)에 해당하는 피측정자 회원 수 조회
+	@Override
+	public int selectDepartmentUserCount(@Param("userId") String userId) throws Exception {
+		return organMapper.selectDepartmentUserCount(userId);
+	}
+
+
+	
 	
 }

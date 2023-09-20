@@ -55,6 +55,7 @@ public class LoginController {
 	 * 기능   : 프리미엄(유치원) 로그인 API
 	 * 작성자 : 정주현 
 	 * 작성일 : 2022. 07. 19
+	 * 수정일 : 2023. 08. 29
 	 */
 	@PostMapping(value = {"/premium/login.do"})
 	@ResponseBody
@@ -85,6 +86,7 @@ public class LoginController {
 		
 		HashMap<String,Object> hm = new HashMap<String,Object>();
 		List<HashMap<String, Object>> measureOranList = new ArrayList<HashMap<String, Object>>();
+		List<HashMap<String, Object>> measurerList = new ArrayList<HashMap<String, Object>>();
 		
 		// 로그인 인증 VO
 		AuthVO authVO = new AuthVO();
@@ -145,7 +147,7 @@ public class LoginController {
 				
 				userVO = userService.selectUserInfo(userId);
 				userType = userVO.getUserType();
-				// ID와 PWD가 검증된 이후 JWT 토큰과 회원의 정보를 제공하고 LOG를 INSERT
+
 				// JWT token 발행
 				// JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
 				// userAuthToken = jwtTokenUtil.createToken(authVO);
@@ -153,6 +155,8 @@ public class LoginController {
 				// 로그인 일자 업데이트
 				logService.updateLoginDt(authVO);
 				
+				// 측정자 목록 조회
+				measurerList = userService.selectMeasurerList();
 				// 로그인 시 등록 되어 있는 측정 예정 혹은 측정 완료 기관 목록 조회 (SYSDATE 기준)
 				// 해당 메소드의 경우 측정자일 경우에만 사용을 해야될 것으로 보이며
 				// 슈퍼관리자 및 매니저의 경우는 SCHOOL_INFO를 참조하여 조회해야할 것으로 보임
@@ -161,11 +165,10 @@ public class LoginController {
 				}else {
 					measureOranList = organService.selectMeasureOrganList(userId);
 				}
-
-				// 데이터 RETURN0
-				// hm.put("userAuthToken", userAuthToken);
-				hm.put("measureOranList", measureOranList);
 				
+				// 로그인 Log 등록
+				logService.insertUserLoginHistory(authVO);
+
 				// 메시지 RETURN
 				hm.put("code", "000");
 				//if(lang.equals("ko")) {
@@ -173,14 +176,17 @@ public class LoginController {
 				//}else if(lang.equals("en")) {
 				//	hm.put("msg", "Login Success");
 				//}
+					
+				// 데이터 RETURN0
+				// hm.put("userAuthToken", userAuthToken);
+				hm.put("measurerList", measurerList);
+				hm.put("measureOranList", measureOranList);
 				
-				// 로그인 Log 등록
-				logService.insertUserLoginHistory(authVO);
 			}
 		} catch (Exception e) {
 			hm.put("code", "500");
 			//if(lang.equals("ko")) {
-				hm.put("msg", "서버 에러가 발생했습니다.\n관리자에게 문의해주시기 바랍니다." );
+				hm.put("msg", "로그인 시 문제가 발생하였습니다.\n관리자에게 문의해주시기 바랍니다." );
 			//}else if(lang.equals("en")) {
 			//	hm.put("msg", "Server Error");
 			//}
