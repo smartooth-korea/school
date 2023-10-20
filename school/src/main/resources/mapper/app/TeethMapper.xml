@@ -507,16 +507,19 @@
 	<select id="selectUserMeasureStatisticsList" parameterType="String" resultType="Hashmap">
 	
 		SELECT DISTINCT
-			SU.USER_NAME																			AS USER_NAME
-			,SU.USER_ID																				AS USER_ID
-			,SSI.SCHOOL_NAME																		AS SCHOOL_NAME
-			,STI.CLASS_NAME																		AS CLASS_NAME
-			,TIMESTAMPDIFF(MONTH, SU.USER_BIRTHDAY, SYSDATE())+1 				AS MONTH_COUNT
-			,DATE_FORMAT(SU.USER_BIRTHDAY, '%Y-%m-%d') 							AS USER_BIRTHDAY 
+<!-- 			SU.USER_NAME																			AS USER_NAME -->
+			CAST(AES_DECRYPT(UNHEX(FROM_BASE64(SU.USER_NAME)), '${securityKey}' ) AS CHAR)				AS USER_NAME
+			,SU.USER_ID																														AS USER_ID
+			,SSI.SCHOOL_NAME																												AS SCHOOL_NAME
+			,STI.CLASS_NAME																												AS CLASS_NAME
+			,TIMESTAMPDIFF(MONTH, SU.USER_BIRTHDAY, SYSDATE())+1 														AS MONTH_COUNT
+<!-- 			,DATE_FORMAT(SU.USER_BIRTHDAY, '%Y-%m-%d') 							AS USER_BIRTHDAY  -->
+			,CAST(AES_DECRYPT(UNHEX(FROM_BASE64(SU.USER_BIRTHDAY)), '${securityKey}' ) AS CHAR)			AS USER_BIRTHDAY
 			,CASE SU.USER_SEX WHEN 'M' THEN '남' 
 							  WHEN 'F' THEN '여'
 							  ELSE '' END 																AS USER_SEX
-			,SU.USER_TEL_NO AS USER_TEL_NO
+<!-- 			,SU.USER_TEL_NO AS USER_TEL_NO -->
+			,CAST(AES_DECRYPT(UNHEX(FROM_BASE64(SU.USER_TEL_NO)), '${securityKey}' ) AS CHAR)			AS USER_TEL_NO
 			,DATE_FORMAT(MEASURE_DT, '%Y-%m-%d') AS MEASURE_DT
 			,STM.CAVITY_NORMAL																	AS CAVITY_NORMAL
 			,STM.CAVITY_CAUTION																	AS CAVITY_CAUTION
@@ -541,6 +544,7 @@
 		AND DATE_FORMAT(MEASURE_DT, '%Y-%m-%d') = #{measureDt}
 		AND STUD.SCHOOL_CODE = #{schoolCode}
 		ORDER BY STM.DETERIORATE_SCORE DESC
+	
 	
 	</select>
 	

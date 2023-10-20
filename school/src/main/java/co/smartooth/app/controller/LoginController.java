@@ -102,10 +102,7 @@ public class LoginController {
 		// 파라미터 >> 값 setting
 		userId= (String)paramMap.get("userId");
 		loginIp = (String)paramMap.get("loginIp"); 
-		
-		// 비밀번호 암호화 
-		AES256Util aes256Util = new AES256Util();
-		userPwd = aes256Util.aesEncode((String)paramMap.get("userPwd"));
+		userPwd = (String)paramMap.get("userPwd");
 		
 		if(userPwd.equals("false")) { // 암호화에 실패할 경우
 			hm.put("code", "500");

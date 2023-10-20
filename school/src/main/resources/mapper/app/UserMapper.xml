@@ -85,9 +85,12 @@
 <!-- 		           ,SSUD.IS_MEASURING													AS IS_MEASURING -->
 		SELECT
 				SSUD.USER_ID																AS userId
-				,SU.USER_NAME															AS userName
-				,DATE_FORMAT(SU.USER_BIRTHDAY, '%Y-%m-%d')				AS userBirthday
-			   	,SU.USER_TEL_NO														AS userTelNo
+<!-- 				,SU.USER_NAME															AS userName -->
+				,CAST(AES_DECRYPT(UNHEX(FROM_BASE64(SU.USER_NAME)), '${securityKey}' ) AS CHAR)				AS userName
+<!-- 				,DATE_FORMAT(SU.USER_BIRTHDAY, '%Y-%m-%d')				AS userBirthday -->
+				,CAST(AES_DECRYPT(UNHEX(FROM_BASE64(SU.USER_BIRTHDAY)), '${securityKey}' ) AS CHAR)			AS USER_BIRTHDAY
+<!-- 			   	,SU.USER_TEL_NO														AS userTelNo -->
+				,CAST(AES_DECRYPT(UNHEX(FROM_BASE64(SU.USER_TEL_NO)), '${securityKey}' ) AS CHAR)			AS userTelNo
 		   	  	,SU.USER_SEX																AS userSex
 	       	   	,SSUD.SCHOOL_TYPE													AS schoolType
 	           	,SSUD.IS_MEASURING													AS isMeasuring
