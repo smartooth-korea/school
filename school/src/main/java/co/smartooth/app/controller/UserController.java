@@ -88,20 +88,21 @@ public class UserController {
 				// 부서(반) 소속 학생 목록 조회
 				stList = userService.selectMeasuredUserList(userId, orderBy);
 				for(int i=0; i<stList.size();i++) {
-					// 피측정자 아이디
+					// 자녀(피측정자) 아이디
 					String stUserId = (String)stList.get(i).get("userId");
-					HashMap<String, Object> prUserInfo = userService.selectPrUserInfo(stUserId);
+					// 부모 아이디
+					// HashMap<String, Object> prUserInfo = userService.selectPrUserInfo(stUserId);
 					String measureDt = teethService.selectMeasureDt(stUserId);
 					if(measureDt == null) {
 						measureDt = "";
 					}
 					stList.get(i).put("measureDt", measureDt);
-					if(prUserInfo==null) {
-						continue;
-					}
-					stList.get(i).put("prUserName", prUserInfo.get("userName"));
-					stList.get(i).put("prUserTelNo", prUserInfo.get("userTelNo"));
-					stList.get(i).put("prUserEmail", prUserInfo.get("userEmail"));
+//					if(prUserInfo==null) {
+//						continue;
+//					}
+//					stList.get(i).put("prUserName", prUserInfo.get("userName"));
+//					stList.get(i).put("prUserTelNo", prUserInfo.get("userTelNo"));
+//					stList.get(i).put("prUserEmail", prUserInfo.get("userEmail"));
 				}
 				
 			} catch (Exception e) {
